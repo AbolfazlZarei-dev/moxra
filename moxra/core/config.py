@@ -167,19 +167,19 @@ class ModelConfig:
 # Available model types - Updated to Moxra
 MODEL_TYPES: Dict[str, ModelConfig] = {
     'd': ModelConfig(
-        url="https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_model.onnx",
+        url="https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_model.onnx",
         filename="moxra_model.onnx",
         dim=224,
         description="Default MobileNet V2 model"
     ),
     'm2': ModelConfig(
-        url="https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_m2model.onnx",
+        url="https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_m2model.onnx",
         filename="moxra_m2model.onnx",
         dim=224,
         description="Optimized MobileNet V2 model"
     ),
     'i3': ModelConfig(
-        url="https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_i3model.onnx",
+        url="https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_i3model.onnx",
         filename="moxra_i3model.onnx",
         dim=299,
         description="Inception V3 model (higher accuracy)"
