@@ -335,7 +335,7 @@ MIT License - استفاده آزاد برای پروژه‌های شخصی و �
   <a href="https://github.com/AbolfazlZarei-dev">
     <img src="https://img.shields.io/badge/GitHub-دنبال_کنید-181717?style=for-the-badge&logo=github" alt="GitHub">
   </a>
-  <a href="https://t.me/Abolfazl_PGR">
+  <a href="https://t.me/SBCS_IR">
     <img src="https://img.shields.io/badge/تلگرام-دنبال_کنید-2CA5E0?style=for-the-badge&logo=telegram" alt="Telegram">
   </a>
   <a href="https://rubika.ir/NinjaCode">
