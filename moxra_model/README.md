@@ -88,13 +88,13 @@ pip install -e .
 New-Item -ItemType Directory -Force -Path "moxra_model"
 
 # دانلود مدل پیش‌فرض
-Invoke-WebRequest -Uri "https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_model.onnx" -OutFile "moxra_model/moxra_model.onnx"
+Invoke-WebRequest -Uri "https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_model.onnx" -OutFile "moxra_model/moxra_model.onnx"
 
 # دانلود مدل بهینه‌شده
-Invoke-WebRequest -Uri "https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_m2model.onnx" -OutFile "moxra_model/moxra_m2model.onnx"
+Invoke-WebRequest -Uri "https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_m2model.onnx" -OutFile "moxra_model/moxra_m2model.onnx"
 
 # دانلود مدل Inception V3
-Invoke-WebRequest -Uri "https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_i3model.onnx" -OutFile "moxra_model/moxra_i3model.onnx"
+Invoke-WebRequest -Uri "https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0/moxra_i3model.onnx" -OutFile "moxra_model/moxra_i3model.onnx"
 ```
 
 **روش دوم - دانلود با curl:**
