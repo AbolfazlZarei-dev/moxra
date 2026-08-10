@@ -58,9 +58,9 @@
 
 | ردیف | نام مدل | توضیحات | حجم | لینک دانلود |
 |:----:|---------|---------|:---:|:-----------:|
-| ۱ | `moxra_model.onnx` | مدل پیش‌فرض MobileNet V2 | ۱۴ مگابایت | [📥 دانلود](https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_model.onnx) |
-| ۲ | `moxra_m2model.onnx` | مدل بهینه‌شده MobileNet V2 | ۱۴ مگابایت | [📥 دانلود](https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_m2model.onnx) |
-| ۳ | `moxra_i3model.onnx` | مدل Inception V3 (دقت بالا) | ۹۲ مگابایت | [📥 دانلود](https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_i3model.onnx) |
+| ۱ | `moxra_model.onnx` | مدل پیش‌فرض MobileNet V2 | ۱۴ مگابایت | [📥 دانلود](https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_model.onnx) |
+| ۲ | `moxra_m2model.onnx` | مدل بهینه‌شده MobileNet V2 | ۱۴ مگابایت | [📥 دانلود](https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_m2model.onnx) |
+| ۳ | `moxra_i3model.onnx` | مدل Inception V3 (دقت بالا) | ۹۲ مگابایت | [📥 دانلود](https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_i3model.onnx) |
 
 ---
 
@@ -103,9 +103,9 @@ Invoke-WebRequest -Uri "https://github.com/AbolfazlZarei-dev/moxra/releases/down
 mkdir -p moxra_model
 
 # دانلود مدل‌ها
-curl -L https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_model.onnx -o moxra_model/moxra_model.onnx
-curl -L https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_m2model.onnx -o moxra_model/moxra_m2model.onnx
-curl -L https://github.com/moxra/moxra/releases/download/v1.0.0/moxra_i3model.onnx -o moxra_model/moxra_i3model.onnx
+curl -L https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_model.onnx -o moxra_model/moxra_model.onnx
+curl -L https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_m2model.onnx -o moxra_model/moxra_m2model.onnx
+curl -L https://github.com/AbolfazlZarei-dev/moxra/releases/download/v1.0.0//moxra_i3model.onnx -o moxra_model/moxra_i3model.onnx
 ```
 
 ---
