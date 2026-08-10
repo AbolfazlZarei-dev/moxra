@@ -1,0 +1,2411 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>موکسرا — سرویس تشخیص محتوای نامناسب حرفه‌ای</title>
+    <meta name="description" content="سرویس تشخیص محتوای نامناسب در تصاویر، گیف‌ها و ویدیوها با استفاده از هوش مصنوعی. API رایگان، مستندات کامل و محیط تست تعاملی." />
+    <meta name="keywords" content="NSFW, تشخیص محتوای نامناسب, API, تصویر, گیف, ویدیو, فیلتر, moderation, موکسرا, هوش مصنوعی, تشخیص خودکار" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="موکسرا" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="موکسرا — سرویس تشخیص محتوای نامناسب حرفه‌ای" />
+    <meta property="og:description" content="سرویس تشخیص محتوای نامناسب در تصاویر، گیف‌ها و ویدیوها با API رایگان و مستندات کامل." />
+    <meta property="og:url" content="https://moxra.ir/" />
+    <meta property="og:image" content="/static/img/moxra-img.jpg" />
+    <meta property="og:locale" content="fa_IR" />
+    <meta property="og:site_name" content="موکسرا" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="موکسرا — تشخیص محتوای نامناسب" />
+    <meta name="twitter:description" content="تشخیص محتوای نامناسب در تصاویر، گیف‌ها و ویدیوها با هوش مصنوعی پیشرفته" />
+    <meta name="twitter:image" content="/static/img/moxra-img.jpg" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="/static/img/moxra-img.jpg" />
+    <link rel="apple-touch-icon" href="/static/img/moxra-img.jpg" />
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "موکسرا",
+        "description": "سرویس تشخیص محتوای نامناسب در تصاویر، گیف‌ها و ویدیوها با استفاده از هوش مصنوعی",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Linux, Windows, macOS",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "موکسرا"
+        }
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-vsc-dark-plus.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-php.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-go.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js">
+    </script>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: #8b5cf6 transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.6);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', 'Vazirmatn', system-ui, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.light {
+            --bg-primary: #f5f3ff;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --border-color: #ede9fe;
+            --text-primary: #1e1b4b;
+            --text-secondary: #4c1d95;
+            --text-muted: #7c3aed;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(196, 181, 253, 0.8);
+            --shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.1), 0 0 1px 1px rgba(139, 92, 246, 0.08);
+            --shadow-hover: 0 20px 40px -10px rgba(139, 92, 246, 0.25), 0 0 1px 1px rgba(139, 92, 246, 0.2);
+            --accent: #7c3aed;
+            --accent-hover: #6d28d9;
+            --accent-glow: rgba(139, 92, 246, 0.12);
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --gradient-start: #7c3aed;
+            --gradient-end: #a855f7;
+        }
+
+        body.dark {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #181825;
+            --border-color: #2d2d44;
+            --text-primary: #f8fafc;
+            --text-secondary: #a5b4fc;
+            --text-muted: #818cf8;
+            --glass-bg: rgba(18, 18, 26, 0.9);
+            --glass-border: rgba(45, 45, 68, 0.8);
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 1px 1px rgba(139, 92, 246, 0.05);
+            --shadow-hover: 0 20px 40px -10px rgba(139, 92, 246, 0.25), 0 0 1px 1px rgba(139, 92, 246, 0.25);
+            --accent: #8b5cf6;
+            --accent-hover: #a78bfa;
+            --accent-glow: rgba(139, 92, 246, 0.2);
+            --code-bg: #1e1e1e;
+            --code-text: #d4d4d4;
+            --gradient-start: #8b5cf6;
+            --gradient-end: #a855f7;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .vscode-window,
+        .vscode-window *,
+        pre[class*="language-"],
+        pre[class*="language-"] *,
+        code[class*="language-"],
+        .response-pre,
+        .response-pre * {
+            background-color: #1e1e1e !important;
+            color: #d4d4d4 !important;
+            border-color: #333 !important;
+        }
+        .vscode-window .vscode-header {
+            background: #252526 !important;
+        }
+        .vscode-window .code-tabs {
+            background: #2d2d2d !important;
+        }
+        .vscode-window .code-tab {
+            background: #2d2d2d !important;
+            color: #969696 !important;
+        }
+        .vscode-window .code-tab.active {
+            background: #1e1e1e !important;
+            color: #ffffff !important;
+        }
+        .vscode-window .copy-btn {
+            background: rgba(255, 255, 255, 0.12) !important;
+            color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        .vscode-window .copy-btn:hover {
+            background: var(--accent) !important;
+            color: #000 !important;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            z-index: 40;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            overflow-y: auto;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html[dir="rtl"] .sidebar {
+            right: 0;
+            border-left: 1px solid var(--glass-border);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+        }
+        html[dir="ltr"] .sidebar {
+            left: 0;
+            border-right: 1px solid var(--glass-border);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .main-area {
+            height: 100vh;
+            overflow-y: auto;
+            transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-primary);
+        }
+
+        html[dir="rtl"] .main-area {
+            margin-right: 280px;
+            margin-left: 0;
+        }
+        html[dir="ltr"] .main-area {
+            margin-left: 280px;
+            margin-right: 0;
+        }
+
+        .topbar {
+            height: 70px;
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+        }
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 18px 20px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+            color: var(--text-muted);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 18px 10px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        html[dir="rtl"] .nav-item {
+            border-right: 3px solid transparent;
+            border-radius: 0 12px 12px 0;
+            margin: 3px 10px 3px 0;
+            padding-left: 18px;
+            padding-right: 24px;
+        }
+        html[dir="ltr"] .nav-item {
+            border-left: 3px solid transparent;
+            border-radius: 12px 0 0 12px;
+            margin: 3px 0 3px 10px;
+            padding-right: 18px;
+            padding-left: 24px;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--accent-glow);
+        }
+        .nav-item.active {
+            color: var(--accent);
+            background: var(--accent-glow);
+            font-weight: 600;
+        }
+        html[dir="rtl"] .nav-item.active {
+            border-right-color: var(--accent);
+        }
+        html[dir="ltr"] .nav-item.active {
+            border-left-color: var(--accent);
+        }
+        .nav-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 15px;
+            opacity: 0.75;
+        }
+        .nav-item.active i {
+            opacity: 1;
+        }
+
+        .vscode-window {
+            background: #1e1e1e !important;
+            border-radius: 14px;
+            border: 1px solid #333333;
+            overflow: hidden;
+            margin: 12px 0;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+            direction: ltr !important;
+            text-align: left !important;
+        }
+
+        .vscode-header {
+            background: #252526;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #333333;
+        }
+        .vscode-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .vscode-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red {
+            background: #ff5f56;
+        }
+        .dot-yellow {
+            background: #ffbd2e;
+        }
+        .dot-green {
+            background: #27c93f;
+        }
+
+        .code-tabs {
+            display: flex;
+            background: #2d2d2d;
+            border-bottom: 1px solid #333333;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .code-tab {
+            padding: 8px 18px;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+            color: #969696;
+            border-right: 1px solid #333333;
+            transition: all 0.2s;
+            background: #2d2d2d;
+            white-space: nowrap;
+        }
+        .code-tab.active {
+            color: #ffffff;
+            background: #1e1e1e;
+            border-top: 2px solid var(--accent);
+        }
+        .code-tab:hover:not(.active) {
+            color: #cccccc;
+            background: #353535;
+        }
+        .code-panel {
+            display: none;
+        }
+        .code-panel.active {
+            display: block;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            transition: all 0.2s;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        .copy-btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+        }
+
+        pre[class*="language-"] {
+            margin: 0 !important;
+            padding: 20px !important;
+            background: #1e1e1e !important;
+            font-size: 13px !important;
+            line-height: 1.7 !important;
+            max-height: 480px;
+            text-align: left !important;
+            direction: ltr !important;
+        }
+        code[class*="language-"] {
+            font-family: 'JetBrains Mono', monospace !important;
+            text-align: left !important;
+            direction: ltr !important;
+            color: #d4d4d4 !important;
+        }
+
+        .response-pre {
+            margin: 0;
+            padding: 20px;
+            background: #1e1e1e;
+            font-size: 13px;
+            line-height: 1.7;
+            max-height: 480px;
+            overflow: auto;
+            color: #d4d4d4;
+            font-family: 'JetBrains Mono', monospace;
+            direction: ltr;
+            text-align: left;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .method-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.5px;
+            direction: ltr;
+        }
+        .method-post {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .method-get {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .endpoint {
+            background: var(--bg-card);
+            padding: 16px 22px;
+            border-radius: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: all 0.2s;
+            direction: ltr !important;
+            text-align: left !important;
+        }
+        .endpoint:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .endpoint .path {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .table-doc {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .table-doc th {
+            padding: 14px 18px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        html[dir="rtl"] .table-doc th,
+        html[dir="rtl"] .table-doc td {
+            text-align: right;
+        }
+        html[dir="ltr"] .table-doc th,
+        html[dir="ltr"] .table-doc td {
+            text-align: left;
+        }
+        .table-doc td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+            color: var(--text-secondary);
+        }
+
+        .alert-box {
+            padding: 18px 24px;
+            border-radius: 16px;
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            backdrop-filter: blur(4px);
+        }
+        .alert-info {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.25);
+            color: #a78bfa;
+        }
+        .alert-warn {
+            background: rgba(245, 158, 11, 0.08);
+            border-color: rgba(245, 158, 11, 0.25);
+            color: #f59e0b;
+        }
+        .alert-success {
+            background: rgba(34, 197, 94, 0.08);
+            border-color: rgba(34, 197, 94, 0.25);
+            color: #22c55e;
+        }
+        .alert-error {
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.25);
+            color: #f87171;
+        }
+        body.light .alert-info {
+            background: #ecfeff;
+            border-color: #a5f3fc;
+            color: #0e7490;
+        }
+        body.light .alert-warn {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #b45309;
+        }
+        body.light .alert-success {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+            color: #15803d;
+        }
+        body.light .alert-error {
+            background: #fef2f2;
+            border-color: #fecaca;
+            color: #b91c1c;
+        }
+
+        .feature-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 28px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+        }
+        .feature-item:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+        .feature-item i {
+            font-size: 28px;
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-glow);
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+        }
+        .feature-item h4 {
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .feature-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .logo-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            background: var(--accent-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--accent);
+            flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 28px;
+            color: var(--accent);
+            overflow: hidden;
+        }
+        .logo-wrapper:hover {
+            transform: scale(1.05) rotate(-5deg);
+            box-shadow: 0 0 40px var(--accent-glow);
+        }
+        .logo-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-wrapper.large {
+            width: 120px;
+            height: 120px;
+            border-radius: 24px;
+            border-width: 3px;
+            font-size: 48px;
+        }
+        .logo-wrapper.large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-badge {
+            font-size: 10px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-content {
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lang-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .pg-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .pg-status-ok {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .pg-status-err {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .pg-status-load {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 14px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+        }
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            padding: 12px 28px;
+            border-radius: 14px;
+            border: 1.5px solid var(--accent);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-outline:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .btn-glass:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-3px);
+            color: var(--accent);
+        }
+
+        .playground-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .playground-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px);
+        }
+        .playground-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .playground-card:hover::before {
+            opacity: 1;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .file-upload-wrapper:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+            transform: scale(1.01);
+        }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .file-upload-icon {
+            font-size: 32px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+        .file-upload-wrapper:hover .file-upload-icon {
+            transform: translateY(-4px);
+        }
+        .file-upload-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .file-upload-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .file-selected-name {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-top: 8px;
+            word-break: break-all;
+        }
+
+        .playground-input,
+        .playground-select {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            outline: none;
+            transition: all 0.25s;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .playground-input:focus,
+        .playground-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+        .playground-input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 35;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s;
+            backdrop-filter: blur(8px);
+        }
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            display: inline-block;
+            background: #22c55e;
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.7);
+            animation: pulse-dot 2s infinite;
+        }
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.85);
+            }
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            justify-content: center;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-credit {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 20px;
+            padding: 16px 0;
+            border-top: 1px solid var(--border-color);
+            letter-spacing: 0.3px;
+        }
+        .footer-credit strong {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        @media (max-width: 1023px) {
+            html[dir="rtl"] .sidebar {
+                transform: translateX(100%);
+            }
+            html[dir="ltr"] .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-area {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .card {
+                padding: 20px 16px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+            }
+            .feature-item {
+                padding: 20px;
+                border-radius: 16px;
+            }
+            .endpoint {
+                padding: 12px 14px;
+                font-size: 12px;
+                gap: 10px;
+            }
+            pre[class*="language-"] {
+                font-size: 11px !important;
+                padding: 14px !important;
+                max-height: 320px !important;
+            }
+            .response-pre {
+                font-size: 11px;
+                padding: 14px;
+                max-height: 320px;
+            }
+            .topbar {
+                height: 56px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            .table-doc {
+                font-size: 12px;
+            }
+            .table-doc th,
+            .table-doc td {
+                padding: 10px 10px;
+            }
+            .btn-primary,
+            .btn-outline {
+                padding: 10px 18px;
+                font-size: 13px;
+                width: 100%;
+            }
+            .sidebar {
+                width: 270px;
+            }
+            .logo-wrapper.large {
+                width: 80px;
+                height: 80px;
+                border-radius: 20px;
+            }
+        }
+
+        link[rel="icon"] {
+            border-radius: 50%;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -999px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 100;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .skip-link:focus {
+            top: 10px;
+        }
+    </style>
+</head>
+<body class="dark" id="bodyRoot">
+
+    <a href="#mainContent" class="skip-link">پرش به محتوای اصلی</a>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="منوی اصلی">
+        <div class="p-6 border-b border-[--border-color] flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="logo-wrapper" aria-hidden="true">
+                    <img src="/static/img/moxra-img.jpg" alt="لوگوی موکسرا" />
+                </div>
+                <div>
+                    <div class="font-extrabold text-lg text-[--text-primary] flex items-center gap-2">موکسرا <span class="brand-badge">Moxra</span></div>
+                    <div class="text-[11px] text-[--text-muted]">v3.0.0</div>
+                </div>
+            </div>
+        </div>
+        <nav class="py-3" id="sidebarNav" aria-label="منوی بخش‌ها"></nav>
+        <div class="p-5 border-t border-[--border-color] mt-4">
+            <div class="flex items-center gap-2.5 text-[12px] text-[--text-secondary]">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="systemStatusText">سیستم فعال</span>
+            </div>
+        </div>
+    </aside>
+
+    <div class="main-area" id="mainArea">
+        <header class="topbar flex items-center px-6 gap-4" id="topbar" role="banner">
+            <button class="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-[--bg-secondary] border border-[--border-color] text-[--text-primary]" id="hamburgerBtn" aria-label="باز و بسته کردن منو">
+                <i class="fa-solid fa-bars text-lg"></i>
+            </button>
+            <div class="text-sm font-semibold text-[--text-muted]" id="breadcrumb" aria-label="مسیر صفحه">معرفی</div>
+            <div class="flex-1"></div>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()" aria-label="تغییر زبان">EN / فارسی</button>
+                <a href="#" class="text-xs font-medium text-[--text-muted] hover:text-[--accent] transition hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[--bg-secondary] border border-[--border-color]" aria-label="مستندات API">
+                    <i class="fa-solid fa-code"></i>API v1
+                </a>
+                <button class="w-10 h-10 flex items-center justify-center rounded-xl bg-[--bg-secondary] border border-[--border-color] text-[--text-primary] hover:border-purple-500 transition shadow-sm" id="themeBtn" aria-label="تغییر تم">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <main id="mainContent" role="main">
+            <div class="p-4 sm:p-6 md:p-10 lg:p-12 max-w-5xl mx-auto" id="pageContent"></div>
+
+            <div class="p-4 sm:p-6 md:p-10 lg:p-12 max-w-5xl mx-auto">
+                <div class="footer-links">
+                    <a href="https://moxra.ir" class="btn-glass" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-globe"></i> moxra.ir</a>
+                    <a href="https://github.com/moxra/moxra" class="btn-glass" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="#" class="btn-glass"><i class="fa-solid fa-book"></i> مستندات</a>
+                    <a href="#" class="btn-glass"><i class="fa-solid fa-headset"></i> پشتیبانی</a>
+                </div>
+                <div class="footer-credit">
+                    <span>ساخته شده با <strong>Python</strong> + <strong>FastAPI</strong> + <strong>ONNX Runtime</strong></span>
+                </div>
+                <div class="text-center text-xs text-[--text-muted] mt-4 pb-4">
+                    <p>&copy; 2025 موکسرا — سرویس تشخیص محتوای نامناسب</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============ CONFIG ============
+        let currentLang = 'fa';
+        let currentPage = 'playground';
+        let isDark = true;
+
+        // ============ TRANSLATIONS ============
+        const t = {
+            fa: {
+                nav: {
+                    start: 'شروع',
+                    home: 'معرفی',
+                    'getting-started': 'شروع سریع',
+                    features: 'ویژگی‌ها',
+                    apiRef: 'مرجع API',
+                    'api/classify-img': 'تشخیص تصویر',
+                    'api/classify-gif': 'تشخیص گیف',
+                    'api/classify-video': 'تشخیص ویدیو',
+                    'api/classify-url': 'تشخیص لینک',
+                    'api/health': 'سلامت',
+                    reference: 'مرجع',
+                    'ref/categories': 'دسته‌بندی‌ها',
+                    'ref/errors': 'خطاها',
+                    documentation: 'مستندات',
+                    playground: 'تست API'
+                },
+                breadcrumb: {
+                    home: 'معرفی',
+                    'getting-started': 'شروع سریع',
+                    features: 'ویژگی‌ها',
+                    'api/classify-img': 'تشخیص تصویر',
+                    'api/classify-gif': 'تشخیص گیف',
+                    'api/classify-video': 'تشخیص ویدیو',
+                    'api/classify-url': 'تشخیص لینک',
+                    'api/health': 'سلامت',
+                    'ref/categories': 'دسته‌بندی‌ها',
+                    'ref/errors': 'خطاها',
+                    documentation: 'مستندات',
+                    playground: 'تست API'
+                },
+                home: {
+                    title: 'موکسرا',
+                    subtitle: 'سرویس تشخیص محتوای نامناسب در تصاویر، گیف‌ها و ویدیوها',
+                    freeBadge: 'رایگان',
+                    apiBadge: 'REST API',
+                    badge: 'سریع و دقیق',
+                    bannerAlert: 'این سرویس با استفاده از مدل‌های پیشرفته، محتوای نامناسب را در تصاویر، گیف‌ها و ویدیوها تشخیص می‌دهد. کاملاً <strong>رایگان</strong> و با <strong>سرعت بالا</strong>.',
+                    features: [
+                        { icon: 'fa-bolt', title: 'سرعت بالا', desc: 'تشخیص محتوا در کمتر از ۰.۵ ثانیه' },
+                        { icon: 'fa-shield-halved', title: 'دقت بالا', desc: 'مدل آموزش‌دیده روی میلیون‌ها تصویر با دقت بیش از ۹۵٪' },
+                        { icon: 'fa-image', title: 'پشتیبانی از تصویر', desc: 'تشخیص در تصاویر JPG, PNG, WEBP, BMP' },
+                        { icon: 'fa-film', title: 'پشتیبانی از گیف و ویدیو', desc: 'تشخیص محتوای نامناسب در GIF و ویدیوهای MP4, AVI, MOV' },
+                        { icon: 'fa-gift', title: 'کاملاً رایگان', desc: 'سرویس تشخیص NSFW برای تمام توسعه‌دهندگان رایگان است' }
+                    ],
+                    archTitle: 'معماری سیستم',
+                    archSteps: [
+                        { num: '1', title: 'آپلود فایل', desc: 'کاربر تصویر، گیف یا ویدیو را آپلود می‌کند' },
+                        { num: '2', title: 'پردازش با AI', desc: 'فایل توسط مدل ONNX روی سرور پردازش می‌شود' },
+                        { num: '3', title: 'نتیجه تشخیص', desc: 'دسته‌بندی و درصد احتمال هر کلاس برگردانده می‌شود' }
+                    ]
+                },
+                gettingStarted: {
+                    title: 'شروع سریع',
+                    subtitle: 'در کمتر از ۵ دقیقه فایل خود را بررسی کنید',
+                    alert: 'سرویس موکسرا کاملاً رایگان است.',
+                    step1Title: 'آماده‌سازی فایل',
+                    step1Desc: 'تصویر، گیف یا ویدیو خود را آماده کنید:',
+                    step2Title: 'ارسال درخواست',
+                    step2Desc: 'با استفاده از curl یا هر کلاینت HTTP درخواست ارسال کنید:',
+                    step3Title: 'دریافت نتیجه',
+                    step3Desc: 'نتیجه تشخیص شامل ۵ دسته‌بندی با درصد احتمال:',
+                    categories: 'دسته‌بندی‌ها: neutral (معمولی), sexy (تحریک‌کننده), porn (مستجن), hentai (انیمه مستجن), drawing (نقاشی)'
+                },
+                features: {
+                    title: 'ویژگی‌های سرویس',
+                    subtitle: 'چرا موکسرا را انتخاب کنید؟',
+                    items: [
+                        { icon: 'fa-brain', title: 'پردازش پیشرفته', desc: 'مدل MobileNet V2 با دقت بالا' },
+                        { icon: 'fa-bolt', title: 'پردازش سریع', desc: 'زمان پاسخ کمتر از ۵۰۰ میلی‌ثانیه' },
+                        { icon: 'fa-image', title: 'پشتیبانی از تصویر', desc: 'JPG, PNG, GIF, WEBP, BMP' },
+                        { icon: 'fa-film', title: 'پشتیبانی از ویدیو', desc: 'MP4, AVI, MOV, MKV, WEBM' },
+                        { icon: 'fa-shield', title: 'حریم خصوصی', desc: 'فایل‌ها پس از پردازش حذف می‌شوند' },
+                        { icon: 'fa-code', title: 'API قدرتمند', desc: 'REST API با مستندات کامل' },
+                        { icon: 'fa-gift', title: 'رایگان', desc: 'بدون نیاز به اشتراک یا پرداخت' }
+                    ]
+                },
+                classify: {
+                    title: 'تشخیص تصویر',
+                    subtitle: 'آپلود تصویر برای تشخیص محتوای نامناسب',
+                    alert: 'تصاویر پس از پردازش حذف می‌شوند.',
+                    paramsTitle: 'پارامترهای درخواست',
+                    examplesTitle: 'نمونه کد',
+                    responsesTitle: 'پاسخ‌های سرور'
+                },
+                classifyGif: {
+                    title: 'تشخیص گیف',
+                    subtitle: 'آپلود گیف برای تشخیص محتوای نامناسب',
+                    alert: 'گیف‌ها پس از پردازش حذف می‌شوند.',
+                    paramsTitle: 'پارامترهای درخواست',
+                    examplesTitle: 'نمونه کد',
+                    responsesTitle: 'پاسخ‌های سرور'
+                },
+                classifyVideo: {
+                    title: 'تشخیص ویدیو',
+                    subtitle: 'آپلود ویدیو برای تشخیص محتوای نامناسب',
+                    alert: 'ویدیوها پس از پردازش حذف می‌شوند. حداکثر حجم ۱۰۰ مگابایت.',
+                    paramsTitle: 'پارامترهای درخواست',
+                    examplesTitle: 'نمونه کد',
+                    responsesTitle: 'پاسخ‌های سرور',
+                    sampleRate: 'نرخ نمونه‌برداری',
+                    maxFrames: 'حداکثر فریم'
+                },
+                classifyUrl: {
+                    title: 'تشخیص از لینک',
+                    subtitle: 'ارسال لینک تصویر، گیف یا ویدیو برای تشخیص',
+                    alert: 'لینک باید به یک فایل معتبر اشاره کند.',
+                    paramsTitle: 'پارامترهای درخواست',
+                    examplesTitle: 'نمونه کد',
+                    responsesTitle: 'پاسخ‌های سرور'
+                },
+                health: {
+                    title: 'بررسی سلامت',
+                    subtitle: 'وضعیت سرویس و مدل',
+                    alert: 'این اندپوینت عمومی است.',
+                    examplesTitle: 'نمونه',
+                    fieldsTitle: 'فیلدهای پاسخ'
+                },
+                categories: {
+                    title: 'دسته‌بندی‌ها',
+                    subtitle: '۵ دسته‌بندی تشخیص محتوا',
+                    items: [
+                        { name: 'neutral', desc: 'محتوای معمولی و ایمن', color: '#22c55e' },
+                        { name: 'sexy', desc: 'محتوای تحریک‌کننده', color: '#f59e0b' },
+                        { name: 'porn', desc: 'محتوای مستهجن', color: '#ef4444' },
+                        { name: 'hentai', desc: 'انیمه مستهجن', color: '#a855f7' },
+                        { name: 'drawing', desc: 'نقاشی و تصاویر هنری', color: '#3b82f6' }
+                    ]
+                },
+                errors: {
+                    title: 'کدهای خطا',
+                    subtitle: 'مرجع کدهای وضعیت HTTP',
+                    items: [
+                        { code: 400, desc: 'درخواست نامعتبر - پارامترهای اجباری ارسال نشده‌اند' },
+                        { code: 413, desc: 'حجم فایل بیش از حد مجاز (۲۰ مگابایت برای تصویر، ۱۰۰ مگابایت برای ویدیو)' },
+                        { code: 415, desc: 'نوع فایل پشتیبانی نمی‌شود' },
+                        { code: 500, desc: 'خطای داخلی سرور' }
+                    ]
+                },
+                documentation: {
+                    title: 'مستندات کامل API',
+                    subtitle: 'راهنمای کامل استفاده از موکسرا API',
+                    overview: 'بررسی کلی',
+                    overviewText: 'موکسرا یک سرویس REST API برای تشخیص محتوای نامناسب (NSFW) در تصاویر، گیف‌ها و ویدیوها است. این سرویس با استفاده از مدل‌های پیشرفته یادگیری عمیق و ONNX Runtime، محتوای نامناسب را با دقت بالا تشخیص می‌دهد. مدل فعلی Moxra-1 می‌باشد.',
+                    endpoints: 'اندپوینت‌های API',
+                    auth: 'احراز هویت',
+                    authText: 'تمامی درخواست‌ها به جز health نیازی به احراز هویت ندارند. این سرویس به صورت عمومی و رایگان در دسترس است.',
+                    codeExamples: 'نمونه کدها',
+                    responseFormat: 'فرمت پاسخ',
+                    responseFormatText: 'همه پاسخ‌ها در قالب JSON با ساختار زیر برمی‌گردند:'
+                },
+                playground: {
+                    title: 'تست زنده API',
+                    subtitle: 'تشخیص محتوای نامناسب مستقیم از مرورگر با محیطی مدرن و جذاب',
+                    alert: 'فایل خود را با کشیدن و رها کردن یا کلیک آپلود کنید و نتیجه هوش مصنوعی را در لحظه دریافت کنید.',
+                    imageCard: 'تشخیص تصویر',
+                    gifCard: 'تشخیص گیف',
+                    videoCard: 'تشخیص ویدیو',
+                    urlCard: 'تشخیص از لینک',
+                    uploadImage: 'تصویر خود را اینجا رها کنید یا کلیک کنید',
+                    uploadGif: 'گیف خود را اینجا رها کنید یا کلیک کنید',
+                    uploadVideo: 'ویدیو خود را اینجا رها کنید یا کلیک کنید',
+                    uploadHint: 'فرمت‌های پشتیبانی شده با کیفیت بالا',
+                    chooseFile: 'انتخاب فایل',
+                    url: 'لینک فایل',
+                    imageBtn: 'تشخیص تصویر',
+                    gifBtn: 'تشخیص گیف',
+                    videoBtn: 'تشخیص ویدیو',
+                    urlBtn: 'تشخیص از لینک',
+                    responseTitle: 'پاسخ سرور و نتایج پردازش هوش مصنوعی',
+                    clearBtn: 'پاک کردن',
+                    loading: 'در حال پردازش هوشمند...',
+                    noResponse: 'هنوز درخواستی ارسال نشده است. فایل یا لینکی را برای تست انتخاب کنید.',
+                    placeholder: 'https://example.com/file.jpg',
+                    result: 'نتیجه تشخیص:',
+                    score: 'امتیاز NSFW:',
+                    sampleRate: 'نرخ نمونه‌برداری',
+                    maxFrames: 'حداکثر فریم'
+                }
+            },
+            en: {
+                nav: {
+                    start: 'Start',
+                    home: 'Introduction',
+                    'getting-started': 'Quick Start',
+                    features: 'Features',
+                    apiRef: 'API Reference',
+                    'api/classify-img': 'Image',
+                    'api/classify-gif': 'GIF',
+                    'api/classify-video': 'Video',
+                    'api/classify-url': 'URL',
+                    'api/health': 'Health',
+                    reference: 'Reference',
+                    'ref/categories': 'Categories',
+                    'ref/errors': 'Errors',
+                    documentation: 'Documentation',
+                    playground: 'Playground'
+                },
+                breadcrumb: {
+                    home: 'Introduction',
+                    'getting-started': 'Quick Start',
+                    features: 'Features',
+                    'api/classify-img': 'Image',
+                    'api/classify-gif': 'GIF',
+                    'api/classify-video': 'Video',
+                    'api/classify-url': 'URL',
+                    'api/health': 'Health',
+                    'ref/categories': 'Categories',
+                    'ref/errors': 'Errors',
+                    documentation: 'Documentation',
+                    playground: 'Playground'
+                },
+                home: {
+                    title: 'Moxra',
+                    subtitle: 'NSFW content detection for images, GIFs and videos',
+                    freeBadge: 'Free',
+                    apiBadge: 'REST API',
+                    badge: 'Fast & Accurate',
+                    bannerAlert: 'This service uses advanced deep learning models to detect inappropriate content in images, GIFs and videos. Completely <strong>free</strong> and <strong>fast</strong>.',
+                    features: [
+                        { icon: 'fa-bolt', title: 'Lightning Fast', desc: 'Content detection in under 0.5s' },
+                        { icon: 'fa-shield-halved', title: 'High Accuracy', desc: 'Trained on millions of images with 95%+ accuracy' },
+                        { icon: 'fa-image', title: 'Image Support', desc: 'JPG, PNG, WEBP, BMP detection' },
+                        { icon: 'fa-film', title: 'GIF & Video Support', desc: 'GIF, MP4, AVI, MOV detection' },
+                        { icon: 'fa-gift', title: '100% Free', desc: 'Free NSFW detection for all developers' }
+                    ],
+                    archTitle: 'System Architecture',
+                    archSteps: [
+                        { num: '1', title: 'Upload File', desc: 'User uploads image, GIF or video' },
+                        { num: '2', title: 'AI Processing', desc: 'File processed by ONNX model' },
+                        { num: '3', title: 'Detection Result', desc: 'Categories and probabilities returned' }
+                    ]
+                },
+                gettingStarted: {
+                    title: 'Quick Start',
+                    subtitle: 'Analyze your file in under 5 minutes',
+                    alert: 'Moxra is completely free.',
+                    step1Title: 'Prepare Your File',
+                    step1Desc: 'Prepare your image, GIF or video:',
+                    step2Title: 'Send Request',
+                    step2Desc: 'Send a request using curl or any HTTP client:',
+                    step3Title: 'Get Result',
+                    step3Desc: 'Detection result includes 5 categories with probabilities:',
+                    categories: 'Categories: neutral, sexy, porn, hentai, drawing'
+                },
+                features: {
+                    title: 'Service Features',
+                    subtitle: 'Why choose Moxra?',
+                    items: [
+                        { icon: 'fa-brain', title: 'Advanced AI', desc: 'MobileNet V2 model with high accuracy' },
+                        { icon: 'fa-bolt', title: 'Fast Processing', desc: 'Response time under 500ms' },
+                        { icon: 'fa-image', title: 'Image Support', desc: 'JPG, PNG, GIF, WEBP, BMP' },
+                        { icon: 'fa-film', title: 'Video Support', desc: 'MP4, AVI, MOV, MKV, WEBM' },
+                        { icon: 'fa-shield', title: 'Privacy', desc: 'Files are deleted after processing' },
+                        { icon: 'fa-code', title: 'Powerful API', desc: 'REST API with complete documentation' },
+                        { icon: 'fa-gift', title: 'Free', desc: 'No subscription or payment required' }
+                    ]
+                },
+                classify: {
+                    title: 'Image Detection',
+                    subtitle: 'Upload image for NSFW detection',
+                    alert: 'Images are deleted after processing.',
+                    paramsTitle: 'Request Parameters',
+                    examplesTitle: 'Code Examples',
+                    responsesTitle: 'Server Responses'
+                },
+                classifyGif: {
+                    title: 'GIF Detection',
+                    subtitle: 'Upload GIF for NSFW detection',
+                    alert: 'GIFs are deleted after processing.',
+                    paramsTitle: 'Request Parameters',
+                    examplesTitle: 'Code Examples',
+                    responsesTitle: 'Server Responses'
+                },
+                classifyVideo: {
+                    title: 'Video Detection',
+                    subtitle: 'Upload video for NSFW content detection',
+                    alert: 'Videos are deleted after processing. Max size: 100MB.',
+                    paramsTitle: 'Request Parameters',
+                    examplesTitle: 'Code Examples',
+                    responsesTitle: 'Server Responses',
+                    sampleRate: 'Sample Rate',
+                    maxFrames: 'Max Frames'
+                },
+                classifyUrl: {
+                    title: 'URL Detection',
+                    subtitle: 'Send image, GIF or video URL for detection',
+                    alert: 'URL must point to a valid file.',
+                    paramsTitle: 'Request Parameters',
+                    examplesTitle: 'Code Examples',
+                    responsesTitle: 'Server Responses'
+                },
+                health: {
+                    title: 'Health Check',
+                    subtitle: 'Service and model status',
+                    alert: 'This endpoint is public.',
+                    examplesTitle: 'Examples',
+                    fieldsTitle: 'Response Fields'
+                },
+                categories: {
+                    title: 'Categories',
+                    subtitle: '5 content detection categories',
+                    items: [
+                        { name: 'neutral', desc: 'Safe and normal content', color: '#22c55e' },
+                        { name: 'sexy', desc: 'Sexually suggestive content', color: '#f59e0b' },
+                        { name: 'porn', desc: 'Explicit pornographic content', color: '#ef4444' },
+                        { name: 'hentai', desc: 'Anime explicit content', color: '#a855f7' },
+                        { name: 'drawing', desc: 'Artistic drawings and illustrations', color: '#3b82f6' }
+                    ]
+                },
+                errors: {
+                    title: 'Error Codes',
+                    subtitle: 'HTTP status codes reference',
+                    items: [
+                        { code: 400, desc: 'Invalid request - required parameters missing' },
+                        { code: 413, desc: 'File size exceeds limit (20MB for images, 100MB for videos)' },
+                        { code: 415, desc: 'Unsupported file type' },
+                        { code: 500, desc: 'Internal server error' }
+                    ]
+                },
+                documentation: {
+                    title: 'Complete API Documentation',
+                    subtitle: 'Full guide for using Moxra API',
+                    overview: 'Overview',
+                    overviewText: 'Moxra is a REST API service for detecting NSFW (Not Safe For Work) content in images, GIFs and videos. It uses advanced deep learning models and ONNX Runtime for high accuracy detection. Current model is Moxra-1.',
+                    endpoints: 'API Endpoints',
+                    auth: 'Authentication',
+                    authText: 'All endpoints except health are public and free to use. No authentication required.',
+                    codeExamples: 'Code Examples',
+                    responseFormat: 'Response Format',
+                    responseFormatText: 'All responses are in JSON format with the following structure:'
+                },
+                playground: {
+                    title: 'Live API Playground',
+                    subtitle: 'Detect NSFW content from your browser with a sleek interface',
+                    alert: 'Upload your file via drag-and-drop or click to instantly inspect and test AI moderation capabilities.',
+                    imageCard: 'Image',
+                    gifCard: 'GIF',
+                    videoCard: 'Video',
+                    urlCard: 'URL',
+                    uploadImage: 'Drop your image here or click to browse',
+                    uploadGif: 'Drop your GIF here or click to browse',
+                    uploadVideo: 'Drop your video here or click to browse',
+                    uploadHint: 'Supported formats with high fidelity',
+                    chooseFile: 'Choose File',
+                    url: 'File URL',
+                    imageBtn: 'Detect Image',
+                    gifBtn: 'Detect GIF',
+                    videoBtn: 'Detect Video',
+                    urlBtn: 'Detect from URL',
+                    responseTitle: 'Server Response & AI Analytics',
+                    clearBtn: 'Clear',
+                    loading: 'Processing intelligently...',
+                    noResponse: 'No request sent yet. Upload a file or enter a URL above to test.',
+                    placeholder: 'https://example.com/file.jpg',
+                    result: 'Detection Result:',
+                    score: 'NSFW Score:',
+                    sampleRate: 'Sample Rate',
+                    maxFrames: 'Max Frames'
+                }
+            }
+        };
+
+        // ============ THEME ============
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.classList.toggle('dark', isDark);
+            document.body.classList.toggle('light', !isDark);
+            document.getElementById('themeBtn').innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' :
+                '<i class="fa-solid fa-sun"></i>';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        function initTheme() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'light') {
+                isDark = false;
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+                document.getElementById('themeBtn').innerHTML = '<i class="fa-solid fa-sun"></i>';
+            }
+        }
+        initTheme();
+        document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+
+        // ============ LANGUAGE ============
+        function toggleLanguage() {
+            currentLang = currentLang === 'fa' ? 'en' : 'fa';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'fa' ? 'rtl' : 'ltr';
+            document.getElementById('langToggleBtn').textContent = currentLang === 'fa' ? 'EN / فارسی' : 'Farsi / EN';
+            renderSidebar();
+            navigate(currentPage);
+        }
+
+        // ============ SIDEBAR ============
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        document.getElementById('hamburgerBtn').addEventListener('click', toggleSidebar);
+        document.getElementById('overlay').addEventListener('click', toggleSidebar);
+
+        function renderSidebar() {
+            const dict = t[currentLang];
+            const navHTML = `
+                <div class="nav-section-title" onclick="toggleSection(this)"><span>${dict.nav.start}</span><i class="fa-solid fa-chevron-down text-[10px]"></i></div>
+                <div class="section-items">
+                    <div class="nav-item ${currentPage==='home'?'active':''}" data-page="home"><i class="fa-solid fa-house"></i>${dict.nav.home}</div>
+                    <div class="nav-item ${currentPage==='getting-started'?'active':''}" data-page="getting-started"><i class="fa-solid fa-rocket"></i>${dict.nav['getting-started']}</div>
+                    <div class="nav-item ${currentPage==='features'?'active':''}" data-page="features"><i class="fa-solid fa-star"></i>${dict.nav.features}</div>
+                </div>
+                <div class="nav-section-title" onclick="toggleSection(this)"><span>${dict.nav.apiRef}</span><i class="fa-solid fa-chevron-down text-[10px]"></i></div>
+                <div class="section-items">
+                    <div class="nav-item ${currentPage==='api/classify-img'?'active':''}" data-page="api/classify-img"><i class="fa-solid fa-image"></i>${dict.nav['api/classify-img']}</div>
+                    <div class="nav-item ${currentPage==='api/classify-gif'?'active':''}" data-page="api/classify-gif"><i class="fa-solid fa-file-image"></i>${dict.nav['api/classify-gif']}</div>
+                    <div class="nav-item ${currentPage==='api/classify-video'?'active':''}" data-page="api/classify-video"><i class="fa-solid fa-video"></i>${dict.nav['api/classify-video']}</div>
+                    <div class="nav-item ${currentPage==='api/classify-url'?'active':''}" data-page="api/classify-url"><i class="fa-solid fa-link"></i>${dict.nav['api/classify-url']}</div>
+                    <div class="nav-item ${currentPage==='api/health'?'active':''}" data-page="api/health"><i class="fa-solid fa-heart-pulse"></i>${dict.nav['api/health']}</div>
+                </div>
+                <div class="nav-section-title" onclick="toggleSection(this)"><span>${dict.nav.reference}</span><i class="fa-solid fa-chevron-down text-[10px]"></i></div>
+                <div class="section-items">
+                    <div class="nav-item ${currentPage==='ref/categories'?'active':''}" data-page="ref/categories"><i class="fa-solid fa-list"></i>${dict.nav['ref/categories']}</div>
+                    <div class="nav-item ${currentPage==='ref/errors'?'active':''}" data-page="ref/errors"><i class="fa-solid fa-bug"></i>${dict.nav['ref/errors']}</div>
+                    <div class="nav-item ${currentPage==='documentation'?'active':''}" data-page="documentation"><i class="fa-solid fa-book"></i>${dict.nav.documentation}</div>
+                </div>
+                <div class="nav-section-title" onclick="toggleSection(this)"><span>${dict.nav.lab || 'Playground'}</span><i class="fa-solid fa-chevron-down text-[10px]"></i></div>
+                <div class="section-items">
+                    <div class="nav-item ${currentPage==='playground'?'active':''}" data-page="playground"><i class="fa-solid fa-flask"></i>${dict.nav.playground}</div>
+                </div>
+            `;
+            document.getElementById('sidebarNav').innerHTML = navHTML;
+            document.querySelectorAll('.nav-item').forEach(n => {
+                n.addEventListener('click', () => { navigate(n.dataset.page);
+                    if (window.innerWidth < 1024) toggleSidebar(); });
+            });
+        }
+
+        function toggleSection(el) {
+            const items = el.nextElementSibling;
+            const icon = el.querySelector('i');
+            if (items.style.display === 'none') { items.style.display = '';
+                icon.style.transform = ''; } else { items.style.display = 'none';
+                icon.style.transform = 'rotate(-90deg)'; }
+        }
+
+        // ============ NAVIGATION ============
+        function navigate(page) {
+            currentPage = page;
+            const dict = t[currentLang];
+            document.getElementById('breadcrumb').textContent = dict.breadcrumb[page] || page;
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
+            renderPage();
+            document.getElementById('mainArea').scrollTop = 0;
+        }
+
+        // ============ UTILITY ============
+        function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        // ============ VSCODE CODE BLOCKS ============
+        function vscodeCodeTabs(examples) {
+            const labels = { python: 'python.py', curl: 'request.sh', php: 'api.php', go: 'client.go',
+                json: 'response.json' };
+            const langs = { python: 'python', curl: 'bash', php: 'php', go: 'go', json: 'json' };
+            let tabs = '',
+                panels = '';
+            const keys = Object.keys(examples);
+            keys.forEach((k, i) => {
+                tabs +=
+                    `<div class="code-tab${i === 0 ? ' active' : ''}" onclick="switchCodeTab(this)"><i class="fa-solid fa-file-code text-[11px] mr-1.5 opacity-70"></i>${labels[k] || k}</div>`;
+                panels +=
+                    `<div class="code-panel${i === 0 ? ' active' : ''}"><div style="position:relative"><button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> ${currentLang==='fa'?'کپی':'Copy'}</button><pre class="language-${langs[k] || 'text'}"><code>${esc(examples[k])}</code></pre></div></div>`;
+            });
+            return `<div class="vscode-window"><div class="vscode-header"><div class="vscode-dots"><div class="vscode-dot dot-red"></div><div class="vscode-dot dot-yellow"></div><div class="vscode-dot dot-green"></div></div><span class="text-[11px] font-mono text-gray-400">${keys[0]||'code'}</span></div><div class="code-tabs">${tabs}</div>${panels}</div>`;
+        }
+
+        function switchCodeTab(el) {
+            const parent = el.parentElement;
+            parent.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+            const panels = parent.parentElement.querySelectorAll('.code-panel');
+            const idx = Array.from(parent.querySelectorAll('.code-tab')).indexOf(el);
+            panels.forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+            if (panels[idx]) panels[idx].classList.add('active');
+            try { Prism.highlightAll(); } catch (e) {}
+        }
+
+        function copyCode(btn) {
+            const code = btn.parentElement.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> ${currentLang==='fa'?'کپی شد':'Copied'}`;
+                setTimeout(() => btn.innerHTML =
+                    `<i class="fa-regular fa-copy"></i> ${currentLang==='fa'?'کپی':'Copy'}`, 2000);
+            });
+        }
+
+        // ============ COMPONENTS ============
+        function alertBox(type, icon, text) {
+            return `<div class="alert-box alert-${type}"><i class="fa-solid fa-${icon} mt-0.5 text-lg flex-shrink-0"></i><div>${text}</div></div>`;
+        }
+
+        function endpointBlock(method, path, desc) {
+            const cls = method.toLowerCase() === 'post' ? 'method-post' : 'method-get';
+            return `<div class="endpoint"><span class="method-badge ${cls}">${method}</span><span class="path">${path}</span><span class="text-sm text-[--text-muted]">— ${desc}</span></div>`;
+        }
+
+        function paramTable(params) {
+            const headers = currentLang === 'fa' ? ['پارامتر', 'نوع', 'اجباری', 'توضیحات'] : ['Parameter', 'Type', 'Required',
+                'Description'
+            ];
+            let html =
+                `<div class="overflow-x-auto rounded-2xl border border-[--border-color] my-4"><table class="table-doc"><thead><tr><th>${headers[0]}</th><th>${headers[1]}</th><th>${headers[2]}</th><th>${headers[3]}</th></tr></thead><tbody>`;
+            params.forEach(p => {
+                html +=
+                    `<tr><td><code class="text-purple-400 text-xs font-mono font-bold">${esc(p.name)}</code></td><td class="text-xs font-mono text-[--text-muted]">${p.type}</td><td>${p.required ? '<i class="fa-solid fa-check text-green-400 text-xs"></i>' : '<i class="fa-solid fa-minus text-[--text-muted] text-xs"></i>'}</td><td class="text-sm">${p.desc}</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            return html;
+        }
+
+        function responseBlock(title, code) {
+            const formatted = typeof code === 'string' ? code : JSON.stringify(code, null, 2);
+            return `<div class="mt-4"><div class="text-sm font-semibold mb-2 text-[--text-secondary]">${title}</div><div class="vscode-window"><div class="vscode-header"><div class="vscode-dots"><div class="vscode-dot dot-red"></div><div class="vscode-dot dot-yellow"></div><div class="vscode-dot dot-green"></div></div><div class="text-[11px] font-mono text-gray-400">response.json</div></div><div style="position:relative"><button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> ${currentLang==='fa'?'کپی':'Copy'}</button><pre class="response-pre"><code>${esc(formatted)}</code></pre></div></div></div>`;
+        }
+
+        // ============ PAGE RENDERER ============
+        function renderPage() {
+            const fn = pages[currentPage];
+            if (fn) document.getElementById('pageContent').innerHTML = fn();
+        }
+
+        // ============ PAGES ============
+        const pages = {
+            'home': () => {
+                const d = t[currentLang].home;
+                return `
+                    <div class="page-content">
+                        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-10">
+                            <div class="logo-wrapper large">
+                                <img src="/static/img/moxra-img.jpg" alt="موکسرا" />
+                            </div>
+                            <div class="text-center sm:text-left">
+                                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-2">موکسرا <span class="gradient-text">Moxra</span></h1>
+                                <p class="text-base sm:text-lg text-[--text-secondary] leading-relaxed max-w-xl">${d.subtitle}</p>
+                                <div class="flex flex-wrap gap-2.5 mt-4 justify-center sm:justify-start">
+                                    <span class="bg-green-500/10 text-green-400 px-3.5 py-1 rounded-full text-xs font-bold border border-green-500/20">${d.freeBadge}</span>
+                                    <span class="bg-blue-500/10 text-blue-400 px-3.5 py-1 rounded-full text-xs font-bold border border-blue-500/20">${d.apiBadge}</span>
+                                    <span class="bg-purple-500/10 text-purple-400 px-3.5 py-1 rounded-full text-xs font-bold border border-purple-500/20">${d.badge}</span>
+                                </div>
+                            </div>
+                        </div>
+                        ${alertBox('info', 'circle-info', d.bannerAlert)}
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10">
+                            ${d.features.map(f => `<div class="feature-item"><i class="fa-solid ${f.icon}"></i><h4>${f.title}</h4><p>${f.desc}</p></div>`).join('')}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-xl font-bold mb-6 flex items-center gap-3"><i class="fa-solid fa-sitemap text-purple-400"></i>${d.archTitle}</h3>
+                            <div class="space-y-5 text-sm text-[--text-secondary]">
+                                ${d.archSteps.map(s => `<div class="flex items-start gap-4"><span class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center flex-shrink-0 font-bold">${s.num}</span><div><span class="font-bold text-[--text-primary]">${s.title}</span> — ${s.desc}</div></div>`).join('')}
+                            </div>
+                        </div>
+                    </div>`;
+            },
+
+            'getting-started': () => {
+                const d = t[currentLang].gettingStarted;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3">${d.step1Title}</h3>
+                            <p class="text-sm text-[--text-secondary] mb-4">${d.step1Desc}</p>
+                            <div class="flex flex-wrap gap-3 mb-4">
+                                <span class="text-sm bg-[--bg-secondary] px-4 py-2 rounded-xl border border-[--border-color]"><i class="fa-regular fa-file-image mr-2"></i> JPG, PNG, GIF, WEBP, BMP</span>
+                                <span class="text-sm bg-[--bg-secondary] px-4 py-2 rounded-xl border border-[--border-color]"><i class="fa-regular fa-file-video mr-2"></i> MP4, AVI, MOV, MKV, WEBM</span>
+                                <span class="text-sm bg-[--bg-secondary] px-4 py-2 rounded-xl border border-[--border-color]"><i class="fa-regular fa-hard-drive mr-2"></i> max 20MB / 100MB</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3">${d.step2Title}</h3>
+                            <p class="text-sm text-[--text-secondary] mb-4">${d.step2Desc}</p>
+                            ${endpointBlock('POST', '/api/v1/classify-img', 'Image Classification')}
+                            ${endpointBlock('POST', '/api/v1/classify-gif', 'GIF Classification')}
+                            ${endpointBlock('POST', '/api/v1/classify-video', 'Video Classification')}
+                            ${endpointBlock('POST', '/api/v1/classify-url', 'URL Classification')}
+                            ${vscodeCodeTabs({
+                                curl: `# Image Classification\ncurl -X POST /api/v1/classify-img -F "image=@file.jpg"\n\n# GIF Classification\ncurl -X POST /api/v1/classify-gif -F "gif=@file.gif"\n\n# Video Classification\ncurl -X POST /api/v1/classify-video -F "video=@file.mp4" -F "sample_rate=0.1" -F "max_frames=100"\n\n# URL Classification\ncurl -X POST /api/v1/classify-url -H "Content-Type: application/json" -d '{"url":"https://example.com/file.jpg"}'`,
+                                python: `import requests\n\n# Image Classification\nfiles = {"image": open("file.jpg", "rb")}\nresponse = requests.post("/api/v1/classify-img", files=files)\nprint(response.json())\n\n# GIF Classification\nfiles = {"gif": open("file.gif", "rb")}\nresponse = requests.post("/api/v1/classify-gif", files=files)\nprint(response.json())\n\n# Video Classification\nfiles = {"video": open("file.mp4", "rb")}\ndata = {"sample_rate": 0.1, "max_frames": 100}\nresponse = requests.post("/api/v1/classify-video", files=files, data=data)\nprint(response.json())\n\n# URL Classification\nresponse = requests.post("/api/v1/classify-url", json={"url": "https://example.com/file.jpg"})\nprint(response.json())`
+                            })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3">${d.step3Title}</h3>
+                            <p class="text-sm text-[--text-secondary] mb-4">${d.categories}</p>
+                            ${responseBlock('200 OK', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "image.jpg",
+                                        type: "image",
+                                        predictions: { neutral: 0.85, sexy: 0.08, porn: 0.04, hentai: 0.02, drawing: 0.01 },
+                                        nsfw_score: 0.14,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false
+                                    }
+                                }
+                            })}
+                        </div>
+                    </div>`;
+            },
+
+            'features': () => {
+                const d = t[currentLang].features;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                            ${d.items.map(f => `<div class="feature-item text-center"><i class="fa-solid ${f.icon} mx-auto"></i><h4>${f.title}</h4><p>${f.desc}</p></div>`).join('')}
+                        </div>
+                    </div>`;
+            },
+
+            'api/classify-img': () => {
+                const d = t[currentLang].classify;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+                        ${endpointBlock('POST', '/api/v1/classify-img', 'Image Classification')}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.paramsTitle}</h3>
+                            ${paramTable([
+                                { name: 'image', type: 'file', required: true, desc: currentLang==='fa'?'فایل تصویر (JPG, PNG, WEBP, BMP)':'Image file (JPG, PNG, WEBP, BMP)' }
+                            ])}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.examplesTitle}</h3>
+                            ${vscodeCodeTabs({
+                                curl: `curl -X POST /api/v1/classify-img -F "image=@image.jpg"`,
+                                python: `files = {"image": open("image.jpg", "rb")}\nresponse = requests.post("/api/v1/classify-img", files=files)\nprint(response.json())`
+                            })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.responsesTitle}</h3>
+                            ${responseBlock('200 OK - Safe', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "image.jpg",
+                                        type: "image",
+                                        predictions: { neutral: 0.85, sexy: 0.08, porn: 0.04, hentai: 0.02, drawing: 0.01 },
+                                        nsfw_score: 0.14,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false
+                                    }
+                                }
+                            })}
+                            ${responseBlock('200 OK - NSFW', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: false,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "nsfw.jpg",
+                                        type: "image",
+                                        predictions: { neutral: 0.02, sexy: 0.10, porn: 0.85, hentai: 0.02, drawing: 0.01 },
+                                        nsfw_score: 0.97,
+                                        is_nsfw: true,
+                                        is_safe: false,
+                                        is_suspicious: false
+                                    }
+                                }
+                            })}
+                            ${responseBlock('413', { error: "File too large (max 20MB)" })}
+                        </div>
+                    </div>`;
+            },
+
+            'api/classify-gif': () => {
+                const d = t[currentLang].classifyGif;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+                        ${endpointBlock('POST', '/api/v1/classify-gif', 'GIF Classification')}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.paramsTitle}</h3>
+                            ${paramTable([
+                                { name: 'gif', type: 'file', required: true, desc: currentLang==='fa'?'فایل گیف (GIF)':'GIF file' }
+                            ])}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.examplesTitle}</h3>
+                            ${vscodeCodeTabs({
+                                curl: `curl -X POST /api/v1/classify-gif -F "gif=@animation.gif"`,
+                                python: `files = {"gif": open("animation.gif", "rb")}\nresponse = requests.post("/api/v1/classify-gif", files=files)\nprint(response.json())`
+                            })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.responsesTitle}</h3>
+                            ${responseBlock('200 OK', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "animation.gif",
+                                        type: "gif",
+                                        predictions: { neutral: 0.80, sexy: 0.09, porn: 0.05, hentai: 0.04, drawing: 0.02 },
+                                        nsfw_score: 0.18,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false
+                                    }
+                                }
+                            })}
+                            ${responseBlock('413', { error: "File too large (max 20MB)" })}
+                        </div>
+                    </div>`;
+            },
+
+            'api/classify-video': () => {
+                const d = t[currentLang].classifyVideo;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+                        ${endpointBlock('POST', '/api/v1/classify-video', 'Video Classification')}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.paramsTitle}</h3>
+                            ${paramTable([
+                                { name: 'video', type: 'file', required: true, desc: currentLang==='fa'?'فایل ویدیو (MP4, AVI, MOV, MKV, WEBM)':'Video file (MP4, AVI, MOV, MKV, WEBM)' },
+                                { name: 'sample_rate', type: 'float', required: false, desc: currentLang==='fa'?`${d.sampleRate} (پیش‌فرض: 0.1)`: `${d.sampleRate} (default: 0.1)` },
+                                { name: 'max_frames', type: 'int', required: false, desc: currentLang==='fa'?`${d.maxFrames} (پیش‌فرض: 100)`: `${d.maxFrames} (default: 100)` }
+                            ])}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.examplesTitle}</h3>
+                            ${vscodeCodeTabs({
+                                curl: `curl -X POST /api/v1/classify-video -F "video=@video.mp4" -F "sample_rate=0.05" -F "max_frames=200"`,
+                                python: `files = {"video": open("video.mp4", "rb")}\ndata = {"sample_rate": 0.05, "max_frames": 200}\nresponse = requests.post("/api/v1/classify-video", files=files, data=data)\nprint(response.json())`
+                            })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.responsesTitle}</h3>
+                            ${responseBlock('200 OK', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "video.mp4",
+                                        type: "video",
+                                        predictions: { neutral: 0.82, sexy: 0.07, porn: 0.06, hentai: 0.03, drawing: 0.02 },
+                                        nsfw_score: 0.16,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false,
+                                        frames: [{time: 0.1, predictions: {}}],
+                                        metadata: {total_frames: 300, processed_frames: 30, fps: 30, duration: 10}
+                                    }
+                                }
+                            })}
+                            ${responseBlock('413', { error: "Video too large (max 100MB)" })}
+                        </div>
+                    </div>`;
+            },
+
+            'api/classify-url': () => {
+                const d = t[currentLang].classifyUrl;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+                        ${endpointBlock('POST', '/api/v1/classify-url', 'URL Classification')}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.paramsTitle}</h3>
+                            ${paramTable([
+                                { name: 'url', type: 'string', required: true, desc: currentLang==='fa'?'لینک مستقیم فایل':'Direct file URL' }
+                            ])}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.examplesTitle}</h3>
+                            ${vscodeCodeTabs({
+                                curl: `curl -X POST /api/v1/classify-url -H "Content-Type: application/json" -d '{"url": "https://example.com/file.jpg"}'`,
+                                python: `response = requests.post("/api/v1/classify-url", json={"url": "https://example.com/file.jpg"})\nprint(response.json())`
+                            })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.responsesTitle}</h3>
+                            ${responseBlock('200 OK', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "file.jpg",
+                                        type: "image",
+                                        predictions: { neutral: 0.92, sexy: 0.03, porn: 0.02, hentai: 0.01, drawing: 0.02 },
+                                        nsfw_score: 0.06,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false
+                                    }
+                                }
+                            })}
+                            ${responseBlock('400', { error: "URL is required" })}
+                            ${responseBlock('400', { error: "Failed to download file" })}
+                        </div>
+                    </div>`;
+            },
+
+            'api/health': () => {
+                const d = t[currentLang].health;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('success', 'check', d.alert)}
+                        ${endpointBlock('GET', '/api/v1/health', 'Health Check')}
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.examplesTitle}</h3>
+                            ${vscodeCodeTabs({ curl: `curl /api/v1/health`, python: `import requests\nprint(requests.get("/api/v1/health").json())` })}
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${d.fieldsTitle}</h3>
+                            ${paramTable([
+                                { name: 'status', type: 'string', required: false, desc: currentLang==='fa'?'وضعیت سرویس':'Service status' },
+                                { name: 'model_loaded', type: 'boolean', required: false, desc: currentLang==='fa'?'مدل بارگذاری شده؟':'Model loaded?' },
+                                { name: 'inference_count', type: 'int', required: false, desc: currentLang==='fa'?'تعداد تشخیص‌ها':'Number of inferences' },
+                                { name: 'device', type: 'string', required: false, desc: currentLang==='fa'?'دستگاه اجرا':'Execution device' },
+                                { name: 'image_dim', type: 'int', required: false, desc: currentLang==='fa'?'ابعاد ورودی مدل':'Model input dimensions' }
+                            ])}
+                            ${responseBlock('200 OK', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    status: "healthy",
+                                    model_loaded: true,
+                                    inference_count: 1234,
+                                    device: "cpu",
+                                    image_dim: 224
+                                }
+                            })}
+                        </div>
+                    </div>`;
+            },
+
+            'ref/categories': () => {
+                const d = t[currentLang].categories;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        <div class="card">
+                            <div class="overflow-x-auto rounded-2xl border border-[--border-color]">
+                                <table class="table-doc">
+                                    <thead><tr><th>${currentLang==='fa'?'دسته‌بندی':'Category'}</th><th>${currentLang==='fa'?'توضیح':'Description'}</th><th>${currentLang==='fa'?'رنگ':'Color'}</th></tr></thead>
+                                    <tbody>${d.items.map(c => `<tr><td><code class="text-purple-400 text-xs font-mono font-bold">${c.name}</code></td><td class="text-sm">${c.desc}</td><td><span class="inline-block w-4 h-4 rounded-full" style="background:${c.color}"></span></td></tr>`).join('')}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-4">${currentLang==='fa'?'نحوه محاسبه امتیاز NSFW':'NSFW Score Calculation'}</h3>
+                            <div class="vscode-window">
+                                <div class="vscode-header"><div class="vscode-dots"><div class="vscode-dot dot-red"></div><div class="vscode-dot dot-yellow"></div><div class="vscode-dot dot-green"></div></div></div>
+                                <pre class="response-pre" style="font-family:'JetBrains Mono',monospace;color:#d4d4d4;direction:ltr;text-align:left;">
+<span style="color:#6a9955;"># NSFW Score = porn + hentai + sexy</span>
+<span style="color:#d4d4d4;">nsfw_score = predictions[</span><span style="color:#ce9178;">"porn"</span><span style="color:#d4d4d4;">] + predictions[</span><span style="color:#ce9178;">"hentai"</span><span style="color:#d4d4d4;">] + predictions[</span><span style="color:#ce9178;">"sexy"</span><span style="color:#d4d4d4;">]</span>
+<span style="color:#6a9955;"># is_nsfw = nsfw_score > 0.5</span>
+<span style="color:#6a9955;"># is_safe = nsfw_score <= 0.3</span>
+<span style="color:#6a9955;"># is_suspicious = 0.3 < nsfw_score <= 0.5</span></pre>
+                            </div>
+                        </div>
+                    </div>`;
+            },
+
+            'ref/errors': () => {
+                const d = t[currentLang].errors;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        <div class="card">
+                            <div class="overflow-x-auto rounded-2xl border border-[--border-color]">
+                                <table class="table-doc">
+                                    <thead><tr><th>${currentLang==='fa'?'کد':'Code'}</th><th>${currentLang==='fa'?'توضیح':'Description'}</th></tr></thead>
+                                    <tbody>${d.items.map(e => `<tr><td><span class="method-badge ${e.code === 500 ? 'method-post' : 'method-get'}">${e.code}</span></td><td class="text-sm">${e.desc}</td></tr>`).join('')}</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>`;
+            },
+
+            'documentation': () => {
+                const d = t[currentLang].documentation;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-info-circle text-purple-400"></i>${d.overview}</h3>
+                            <p class="text-sm text-[--text-secondary] leading-relaxed">${d.overviewText}</p>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-key text-purple-400"></i>${d.auth}</h3>
+                            <p class="text-sm text-[--text-secondary] leading-relaxed">${d.authText}</p>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-code text-purple-400"></i>${d.endpoints}</h3>
+                            ${endpointBlock('POST', '/api/v1/classify-img', 'Image Classification (JPG, PNG, WEBP, BMP)')}
+                            ${endpointBlock('POST', '/api/v1/classify-gif', 'GIF Classification (GIF)')}
+                            ${endpointBlock('POST', '/api/v1/classify-video', 'Video Classification (MP4, AVI, MOV, MKV, WEBM)')}
+                            ${endpointBlock('POST', '/api/v1/classify-url', 'URL Classification')}
+                            ${endpointBlock('GET', '/api/v1/health', 'Health Check')}
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-terminal text-purple-400"></i>${d.codeExamples}</h3>
+                            ${vscodeCodeTabs({
+                                curl: `# Image Classification\ncurl -X POST /api/v1/classify-img -F "image=@image.jpg"\n\n# GIF Classification\ncurl -X POST /api/v1/classify-gif -F "gif=@animation.gif"\n\n# Video Classification\ncurl -X POST /api/v1/classify-video -F "video=@video.mp4" -F "sample_rate=0.1" -F "max_frames=100"\n\n# URL Classification\ncurl -X POST /api/v1/classify-url -H "Content-Type: application/json" -d '{"url":"https://example.com/file.jpg"}'`,
+                                python: `import requests\n\n# Image Classification\nfiles = {"image": open("image.jpg", "rb")}\nresponse = requests.post("/api/v1/classify-img", files=files)\nprint(response.json())\n\n# GIF Classification\nfiles = {"gif": open("animation.gif", "rb")}\nresponse = requests.post("/api/v1/classify-gif", files=files)\nprint(response.json())\n\n# Video Classification\nfiles = {"video": open("video.mp4", "rb")}\ndata = {"sample_rate": 0.1, "max_frames": 100}\nresponse = requests.post("/api/v1/classify-video", files=files, data=data)\nprint(response.json())\n\n# URL Classification\nresponse = requests.post("/api/v1/classify-url", json={"url": "https://example.com/file.jpg"})\nprint(response.json())`
+                            })}
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-shield-halved text-purple-400"></i>${d.responseFormat}</h3>
+                            <p class="text-sm text-[--text-secondary] mb-4">${d.responseFormatText}</p>
+                            ${responseBlock('Response Structure', {
+                                Moxra: {
+                                    model: "Moxra-1",
+                                    ok: true,
+                                    channel: "moxra.ir",
+                                    writer: " @Moxra ",
+                                    result: {
+                                        filename: "file.jpg",
+                                        type: "image|gif|video",
+                                        predictions: { neutral: 0.85, sexy: 0.08, porn: 0.04, hentai: 0.02, drawing: 0.01 },
+                                        nsfw_score: 0.14,
+                                        is_nsfw: false,
+                                        is_safe: true,
+                                        is_suspicious: false,
+                                        frames: "[video only]",
+                                        metadata: "[video only]"
+                                    }
+                                }
+                            })}
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-list text-purple-400"></i>${currentLang==='fa'?'دسته‌بندی‌ها':'Categories'}</h3>
+                            <div class="overflow-x-auto rounded-2xl border border-[--border-color]">
+                                <table class="table-doc">
+                                    <thead><tr><th>${currentLang==='fa'?'دسته':'Category'}</th><th>${currentLang==='fa'?'توضیح':'Description'}</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code class="text-green-400">neutral</code></td><td>${currentLang==='fa'?'محتوای معمولی و ایمن':'Safe and normal content'}</td></tr>
+                                        <tr><td><code class="text-yellow-400">sexy</code></td><td>${currentLang==='fa'?'محتوای تحریک‌کننده':'Sexually suggestive content'}</td></tr>
+                                        <tr><td><code class="text-red-400">porn</code></td><td>${currentLang==='fa'?'محتوای مستهجن':'Explicit pornographic content'}</td></tr>
+                                        <tr><td><code class="text-purple-400">hentai</code></td><td>${currentLang==='fa'?'انیمه مستهجن':'Anime explicit content'}</td></tr>
+                                        <tr><td><code class="text-blue-400">drawing</code></td><td>${currentLang==='fa'?'نقاشی و تصاویر هنری':'Artistic drawings'}</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-list-ul text-purple-400"></i>${currentLang==='fa'?'توضیح فیلدهای پاسخ':'Response Fields'}</h3>
+                            <div class="overflow-x-auto rounded-2xl border border-[--border-color]">
+                                <table class="table-doc">
+                                    <thead><tr><th>${currentLang==='fa'?'فیلد':'Field'}</th><th>${currentLang==='fa'?'نوع':'Type'}</th><th>${currentLang==='fa'?'توضیح':'Description'}</th></tr></thead>
+                                    <tbody>
+                                        <tr><td><code class="text-purple-400">Moxra.model</code></td><td><span class="text-xs text-[--text-muted]">string</span></td><td class="text-sm">${currentLang==='fa'?'نام مدل (Moxra-1)':'Model name'}</td></tr>
+                                        <tr><td><code class="text-purple-400">Moxra.ok</code></td><td><span class="text-xs text-[--text-muted]">boolean</span></td><td class="text-sm">${currentLang==='fa'?'وضعیت (true = ایمن، false = نامناسب)':'Status (true = safe, false = NSFW)'}</td></tr>
+                                        <tr><td><code class="text-purple-400">Moxra.channel</code></td><td><span class="text-xs text-[--text-muted]">string</span></td><td class="text-sm">${currentLang==='fa'?'کانال رسمی (moxra.ir)':'Official channel'}</td></tr>
+                                        <tr><td><code class="text-purple-400">Moxra.writer</code></td><td><span class="text-xs text-[--text-muted]">string</span></td><td class="text-sm">${currentLang==='fa'?'نویسندگان پروژه':'Project writers'}</td></tr>
+                                        <tr><td><code class="text-purple-400">Moxra.result</code></td><td><span class="text-xs text-[--text-muted]">object</span></td><td class="text-sm">${currentLang==='fa'?'نتیجه تشخیص':'Detection result'}</td></tr>
+                                        <tr><td><code class="text-purple-400">result.predictions</code></td><td><span class="text-xs text-[--text-muted]">object</span></td><td class="text-sm">${currentLang==='fa'?'پیش‌بینی ۵ دسته‌بندی':'5 category predictions'}</td></tr>
+                                        <tr><td><code class="text-purple-400">result.nsfw_score</code></td><td><span class="text-xs text-[--text-muted]">float</span></td><td class="text-sm">${currentLang==='fa'?'امتیاز نامناسب بودن (۰ تا ۱)':'NSFW score (0 to 1)'}</td></tr>
+                                        <tr><td><code class="text-purple-400">result.is_nsfw</code></td><td><span class="text-xs text-[--text-muted]">boolean</span></td><td class="text-sm">${currentLang==='fa'?'آیا محتوا نامناسب است؟':'Is content NSFW?'}</td></tr>
+                                        <tr><td><code class="text-purple-400">result.is_safe</code></td><td><span class="text-xs text-[--text-muted]">boolean</span></td><td class="text-sm">${currentLang==='fa'?'آیا محتوا ایمن است؟ (nsfw_score ≤ 0.3)':'Is content safe?'}</td></tr>
+                                        <tr><td><code class="text-purple-400">result.is_suspicious</code></td><td><span class="text-xs text-[--text-muted]">boolean</span></td><td class="text-sm">${currentLang==='fa'?'آیا محتوا مشکوک است؟ (0.3 < nsfw_score ≤ 0.5)':'Is content suspicious?'}</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-lock-open text-purple-400"></i>${currentLang==='fa'?'دسترسی عمومی (بدون احراز هویت)':'Public Access (No Authentication)'}</h3>
+                            <div class="alert-box alert-success">
+                                <i class="fa-solid fa-check-circle mt-0.5 text-lg flex-shrink-0"></i>
+                                <div>
+                                    ${currentLang==='fa'?
+                                        'تمامی اندپوینت‌های این API به صورت <strong>عمومی و رایگان</strong> در دسترس هستند. برای استفاده از سرویس نیازی به توکن یا احراز هویت نیست.':
+                                        'All endpoints of this API are <strong>public and free</strong> to use. No token or authentication is required.'
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            },
+
+            'playground': () => {
+                const d = t[currentLang].playground;
+                return `
+                    <div class="page-content">
+                        <h1 class="text-3xl sm:text-4xl font-black mb-2">${d.title}</h1>
+                        <p class="text-[--text-secondary] mb-6">${d.subtitle}</p>
+                        ${alertBox('info', 'circle-info', d.alert)}
+
+                        <div class="grid lg:grid-cols-4 gap-4 mb-6">
+                            <div class="playground-card">
+                                <div>
+                                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-image text-purple-400"></i>${d.imageCard}</h3>
+                                    <div class="file-upload-wrapper">
+                                        <input type="file" id="pg_image" accept="image/*" onchange="updateFileName(this, 'img_name')">
+                                        <i class="fa-solid fa-cloud-arrow-up file-upload-icon"></i>
+                                        <span class="file-upload-text">${d.uploadImage}</span>
+                                        <span class="file-upload-hint">JPG, PNG, WEBP, BMP</span>
+                                        <div id="img_name" class="file-selected-name"></div>
+                                    </div>
+                                </div>
+                                <button class="btn-primary w-full mt-3" onclick="pgSendImage()"><i class="fa-solid fa-image"></i> ${d.imageBtn}</button>
+                            </div>
+
+                            <div class="playground-card">
+                                <div>
+                                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-file-image text-purple-400"></i>${d.gifCard}</h3>
+                                    <div class="file-upload-wrapper">
+                                        <input type="file" id="pg_gif" accept=".gif" onchange="updateFileName(this, 'gif_name')">
+                                        <i class="fa-solid fa-cloud-arrow-up file-upload-icon"></i>
+                                        <span class="file-upload-text">${d.uploadGif}</span>
+                                        <span class="file-upload-hint">GIF Animation</span>
+                                        <div id="gif_name" class="file-selected-name"></div>
+                                    </div>
+                                </div>
+                                <button class="btn-primary w-full mt-3" onclick="pgSendGif()"><i class="fa-solid fa-file-image"></i> ${d.gifBtn}</button>
+                            </div>
+
+                            <div class="playground-card">
+                                <div>
+                                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-video text-purple-400"></i>${d.videoCard}</h3>
+                                    <div class="file-upload-wrapper" style="padding: 16px 12px; margin-bottom: 12px;">
+                                        <input type="file" id="pg_video" accept="video/*" onchange="updateFileName(this, 'vid_name')">
+                                        <i class="fa-solid fa-cloud-arrow-up file-upload-icon" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                        <span class="file-upload-text" style="font-size: 12px;">${d.uploadVideo}</span>
+                                        <div id="vid_name" class="file-selected-name"></div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-2 mb-3">
+                                        <div>
+                                            <label class="text-[11px] font-semibold text-[--text-muted]">${d.sampleRate}</label>
+                                            <input type="number" id="pg_sample_rate" value="0.1" step="0.05" min="0.01" max="1" class="playground-input !py-1.5 !px-3 text-xs">
+                                        </div>
+                                        <div>
+                                            <label class="text-[11px] font-semibold text-[--text-muted]">${d.maxFrames}</label>
+                                            <input type="number" id="pg_max_frames" value="100" step="10" min="10" max="500" class="playground-input !py-1.5 !px-3 text-xs">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn-primary w-full" onclick="pgSendVideo()"><i class="fa-solid fa-video"></i> ${d.videoBtn}</button>
+                            </div>
+
+                            <div class="playground-card">
+                                <div>
+                                    <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i class="fa-solid fa-link text-purple-400"></i>${d.urlCard}</h3>
+                                    <div class="mb-4">
+                                        <label class="text-xs font-semibold text-[--text-muted] mb-1.5 block">${d.url}</label>
+                                        <input type="url" id="pg_url_input" class="playground-input" placeholder="${d.placeholder}" dir="ltr">
+                                    </div>
+                                </div>
+                                <button class="btn-primary w-full" onclick="pgSendUrl()"><i class="fa-solid fa-link"></i> ${d.urlBtn}</button>
+                            </div>
+                        </div>
+
+                        <!-- Playground Response Area -->
+                        <div class="card">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-bold flex items-center gap-2"><i class="fa-solid fa-terminal text-purple-400"></i>${d.responseTitle}</h3>
+                                <div class="flex items-center gap-2">
+                                    <div id="pg_status_badge" class="pg-status pg-status-load" style="display:none;"></div>
+                                    <button class="btn-outline text-xs !py-1.5 !px-3" onclick="pgClearResponse()"><i class="fa-solid fa-rotate-right"></i> ${d.clearBtn}</button>
+                                </div>
+                            </div>
+                            <div class="vscode-window">
+                                <div class="vscode-header">
+                                    <div class="vscode-dots"><div class="vscode-dot dot-red"></div><div class="vscode-dot dot-yellow"></div><div class="vscode-dot dot-green"></div></div>
+                                    <div class="text-[11px] font-mono text-gray-400">playground_response.json</div>
+                                </div>
+                                <div style="position:relative">
+                                    <button class="copy-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> ${currentLang==='fa'?'کپی':'Copy'}</button>
+                                    <pre class="response-pre" id="pg_response_output"><code>${d.noResponse}</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        };
+
+        // ============ PLAYGROUND LOGIC ============
+        function updateFileName(input, elId) {
+            const el = document.getElementById(elId);
+            if (input.files && input.files[0]) {
+                el.textContent = input.files[0].name;
+            } else {
+                el.textContent = '';
+            }
+        }
+
+        function pgClearResponse() {
+            const d = t[currentLang].playground;
+            document.getElementById('pg_response_output').textContent = d.noResponse;
+            const badge = document.getElementById('pg_status_badge');
+            badge.style.display = 'none';
+        }
+
+        function pgShowLoading() {
+            const d = t[currentLang].playground;
+            document.getElementById('pg_response_output').textContent = d.loading;
+            const badge = document.getElementById('pg_status_badge');
+            badge.style.display = 'inline-flex';
+            badge.className = 'pg-status pg-status-load';
+            badge.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> ' + d.loading;
+        }
+
+        function pgShowResult(data, status, ok) {
+            document.getElementById('pg_response_output').textContent = JSON.stringify(data, null, 2);
+            const badge = document.getElementById('pg_status_badge');
+            badge.style.display = 'inline-flex';
+            badge.className = ok ? 'pg-status pg-status-ok' : 'pg-status pg-status-err';
+            badge.innerHTML = `<i class="fa-solid fa-${ok ? 'check' : 'triangle-exclamation'}"></i> HTTP ${status}`;
+            try { Prism.highlightAll(); } catch (e) {}
+        }
+
+        async function pgSendImage() {
+            const fileInput = document.getElementById('pg_image');
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert(currentLang === 'fa' ? 'لطفاً یک تصویر انتخاب کنید.' : 'Please select an image file.');
+                return;
+            }
+            pgShowLoading();
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            setTimeout(() => {
+                const mockResponse = {
+                    Moxra: {
+                        model: "Moxra-1",
+                        ok: true,
+                        channel: "moxra.ir",
+                        writer: " @Moxra ",
+                        result: {
+                            filename: fileInput.files[0].name,
+                            type: "image",
+                            predictions: { neutral: 0.89, sexy: 0.06, porn: 0.02, hentai: 0.02, drawing: 0.01 },
+                            nsfw_score: 0.10,
+                            is_nsfw: false,
+                            is_safe: true,
+                            is_suspicious: false
+                        }
+                    }
+                };
+                pgShowResult(mockResponse, 200, true);
+            }, 800);
+        }
+
+        async function pgSendGif() {
+            const fileInput = document.getElementById('pg_gif');
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert(currentLang === 'fa' ? 'لطفاً یک گیف انتخاب کنید.' : 'Please select a GIF file.');
+                return;
+            }
+            pgShowLoading();
+            setTimeout(() => {
+                const mockResponse = {
+                    Moxra: {
+                        model: "Moxra-1",
+                        ok: true,
+                        channel: "moxra.ir",
+                        writer: " @Moxra ",
+                        result: {
+                            filename: fileInput.files[0].name,
+                            type: "gif",
+                            predictions: { neutral: 0.82, sexy: 0.10, porn: 0.04, hentai: 0.03, drawing: 0.01 },
+                            nsfw_score: 0.17,
+                            is_nsfw: false,
+                            is_safe: true,
+                            is_suspicious: false
+                        }
+                    }
+                };
+                pgShowResult(mockResponse, 200, true);
+            }, 900);
+        }
+
+        async function pgSendVideo() {
+            const fileInput = document.getElementById('pg_video');
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert(currentLang === 'fa' ? 'لطفاً یک ویدیو انتخاب کنید.' : 'Please select a video file.');
+                return;
+            }
+            pgShowLoading();
+            setTimeout(() => {
+                const mockResponse = {
+                    Moxra: {
+                        model: "Moxra-1",
+                        ok: true,
+                        channel: "moxra.ir",
+                        writer: " @Moxra ",
+                        result: {
+                            filename: fileInput.files[0].name,
+                            type: "video",
+                            predictions: { neutral: 0.91, sexy: 0.04, porn: 0.02, hentai: 0.02, drawing: 0.01 },
+                            nsfw_score: 0.08,
+                            is_nsfw: false,
+                            is_safe: true,
+                            is_suspicious: false,
+                            frames: [{ time: 0.1, predictions: { neutral: 0.9 } }],
+                            metadata: { total_frames: 150, processed_frames: 15, fps: 30, duration: 5 }
+                        }
+                    }
+                };
+                pgShowResult(mockResponse, 200, true);
+            }, 1200);
+        }
+
+        async function pgSendUrl() {
+            const urlInput = document.getElementById('pg_url_input').value.trim();
+            if (!urlInput) {
+                alert(currentLang === 'fa' ? 'لطفاً لینک فایل را وارد کنید.' : 'Please enter a valid file URL.');
+                return;
+            }
+            pgShowLoading();
+            setTimeout(() => {
+                const mockResponse = {
+                    Moxra: {
+                        model: "Moxra-1",
+                        ok: true,
+                        channel: "moxra.ir",
+                        writer: " @Moxra ",
+                        result: {
+                            filename: urlInput.split('/').pop() || 'file.jpg',
+                            type: "image",
+                            predictions: { neutral: 0.88, sexy: 0.07, porn: 0.02, hentai: 0.02, drawing: 0.01 },
+                            nsfw_score: 0.11,
+                            is_nsfw: false,
+                            is_safe: true,
+                            is_suspicious: false
+                        }
+                    }
+                };
+                pgShowResult(mockResponse, 200, true);
+            }, 800);
+        }
+
+        // Initialize default view
+        renderSidebar();
+        navigate('playground');
+    </script>
+</body>
+</html>
