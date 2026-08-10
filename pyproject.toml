@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moxra"
+version = "1.0.0"
+description = "Professional NSFW content detection for images, GIFs, and videos"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Abolfazl Zarei", email = "ninjacode.ir@gmail.com"}
+]

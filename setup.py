@@ -39,7 +39,7 @@ PACKAGE_VERSION = "1.0.0"
 PACKAGE_AUTHOR = "Moxra Team"
 PACKAGE_EMAIL = "info@moxra.ir"
 PACKAGE_DESCRIPTION = "Professional NSFW content detection for images, GIFs, and videos"
-PACKAGE_URL = "https://github.com/moxra/moxra"
+PACKAGE_URL = "https://github.com/AbolfazlZarei-dev/moxra"
 
 setup(
     # Core package information
